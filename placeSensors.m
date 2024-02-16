@@ -13,6 +13,7 @@ outOfBoundsWeight = 9;  % Weight of out of bounds blocks, higher = sensors are g
 %%%
 
 sensorType1 = struct('id', 1, 'r', 250, 'qtt', 140); % 1 250 140
+totalType1 = sensorType1.qtt;
 
 totalByLevel = [0,0,0];
 totalArea = 0;
@@ -67,6 +68,9 @@ sensorsAreas = zeros(hMBs, wMBs);
 
 %%% matrix with double the radius of each sensor area
 usedAreasMap = zeros(hMBs,wMBs);
+
+%%% array with all used sensors (structs with x, y, r (radius) and connLevel (1,2,3))
+usedSensors = [];
 
 testMap = zeros(hMBs, wMBs);
                                  
@@ -136,8 +140,8 @@ while (sensorType1.qtt > 0)
 
             % Searching a square area around the selected block, in order to
             % maximize the coverage
-            for m1=firstBSearchM : firstBSearchM + searchSide
-                for n1=firstBSearchN : firstBSearchN + searchSide
+            for m1=1: mIndex
+                for n1=1 : nIndex
 
                     %n1
                     %m1
@@ -171,7 +175,8 @@ while (sensorType1.qtt > 0)
                         %Print search area around sensor
                         %rectangle('Position',[x3s y3s ws hs],'LineWidth',0.5, 'FaceColor','cyan');
                         
-                        if (nowConn >= minPosConn)                        
+                        if (nowConn >= minPosConn)      
+                            dpConnSum = nowConn;
 
                             xcS = xc;
                             ycS = yc;
@@ -197,9 +202,17 @@ while (sensorType1.qtt > 0)
                                     if (getDistance(xcS, ycS, xc, yc) <= sensorType1.r)
                                         if (j < hMBs && j > 0 && i < wMBs  && i > 0)
 
+                                            %%% getting sensors that cover
+                                            %%% this block
+
+                                            for i0 = 1 : size(usedSensors)
+                                                if(getDistance(j,i, usedSensors(i0).x, usedSensors(i0).y) <= sensorType1.r)
+                                                    dpConnSum = dpConnSum + usedSensors(i0).conn;
+                                                end
+                                            end
+
                                             if (sensorsAreas(j, i) == 1)
                                                 oLeapBlocks = oLeapBlocks + 1;
-                                                dpConnSum = dpConnSum + MBs_classes(n1, m1);
                                             else
                                                 nonOLeapBlocks = nonOLeapBlocks + 1;
                                             end
@@ -211,10 +224,18 @@ while (sensorType1.qtt > 0)
                                         
                                         if (cnt < -1)
                                            if (j + cnt < hMBs && j + cnt > 0 && i < wMBs && i > 0)
+                                                
+                                                %%% getting sensors that cover
+                                                %%% this block
+    
+                                                for i0 = 1 : size(usedSensors)
+                                                    if(getDistance(j + cnt, i , usedSensors(i0).x, usedSensors(i0).y) <= sensorType1.r)
+                                                        dpConnSum = dpConnSum + usedSensors(i0).conn;
+                                                    end
+                                                end
 
                                                 if (sensorsAreas(j + cnt, i) == 1)
                                                     oLeapBlocks = oLeapBlocks + 1;
-                                                    dpConnSum = dpConnSum + MBs_classes(n1, m1);
                                                 else
                                                     nonOLeapBlocks = nonOLeapBlocks + 1;
                                                 end
@@ -237,10 +258,18 @@ while (sensorType1.qtt > 0)
         
                                         if (cnt2 < -1)
                                             if (i + cnt2 < wMBs && i + cnt2 > 0 && j < hMBs && j > 0)
-
+                                                
+                                                %%% getting sensors that cover
+                                                %%% this block
+    
+                                                for i0 = 1 : size(usedSensors)
+                                                    if(getDistance(j,i + cnt2, usedSensors(i0).x, usedSensors(i0).y) <= sensorType1.r)
+                                                        dpConnSum = dpConnSum + usedSensors(i0).conn;
+                                                    end
+                                                end
+                                                
                                                 if (sensorsAreas(j, i + cnt2) == 1)
                                                     oLeapBlocks = oLeapBlocks + 1;
-                                                    dpConnSum = dpConnSum + MBs_classes(n1, m1);
                                                 else
                                                     nonOLeapBlocks = nonOLeapBlocks + 1;
                                                 end
@@ -263,10 +292,19 @@ while (sensorType1.qtt > 0)
                                         
                                         if (cnt2 < -1)
                                             if (j + cnt < hMBs && i + cnt2 < wMBs && j + cnt > 0 && i + cnt2 > 0)
-                                                    
+                                                
+                                                %%% getting sensors that cover
+                                                %%% this block
+    
+                                                for i0 = 1 : size(usedSensors)
+                                                    if(getDistance(j + cnt,i + cnt2, usedSensors(i0).x, usedSensors(i0).y) <= sensorType1.r)
+                                                        dpConnSum = dpConnSum + usedSensors(i0).conn;
+                                                    end
+                                                end
+
+
                                                 if (sensorsAreas(j + cnt, i + cnt2) == 1)
                                                     oLeapBlocks = oLeapBlocks + 1;
-                                                    dpConnSum = dpConnSum + MBs_classes(n1, m1);
                                                 else
                                                     nonOLeapBlocks = nonOLeapBlocks + 1;
                                                 end
@@ -298,10 +336,9 @@ while (sensorType1.qtt > 0)
                     end
                     
 
-                    ratioOL = (oLeapBlocks + outOfBounds) / (oLeapBlocks+nonOLeapBlocks+outOfBounds);
+                    %%ratioOL = (oLeapBlocks + outOfBounds) / (oLeapBlocks+nonOLeapBlocks+outOfBounds);
                     totalMbs = oLeapBlocks+nonOLeapBlocks+outOfBounds;
-
-                    sensorValue = dpConnSum * ( oLeapBlocks - (outOfBounds/3) / totalMbs);
+                    sensorValue = dpConnSum * ( (oLeapBlocks - (outOfBounds/3)) / totalMbs);
 
                     % if (ratioOL < (maxOverLeapRatio / 100))
                     % 
@@ -321,7 +358,7 @@ while (sensorType1.qtt > 0)
                     % 
                     % end
                     
-                    if (ratioOL < (maxOverLeapRatio / 100))
+                    %if (ratioOL < (maxOverLeapRatio / 100))
                         if (m1 == maxConnM && n1 == maxConnN)
                             if (sensorValue == maxSensorValue)
                                 maxSensorValue = sensorValue;
@@ -336,7 +373,7 @@ while (sensorType1.qtt > 0)
                             maxCovN = n1;
     
                         end
-                    end
+                    %end
 
                     % if (nowCoverageStatus > maxCoverageStatus)
                     % 
@@ -370,6 +407,15 @@ while (sensorType1.qtt > 0)
                 %rectangle('Position',[x3s y3s ws hs],'LineWidth',0.5,'EdgeColor','b');
                 hold on
                 sensorType1.qtt = sensorType1.qtt - 1;
+                
+                nowStruct = struct('x', xc, 'y', yc, 'r', sensorType1.r, 'conn', MBs_classes(maxCovN, maxCovM));
+
+                if (size(usedSensors) ~= 0)
+                    usedSensors = [usedSensors nowStruct];
+                else 
+                    usedSensors = nowStruct;
+                end
+
                 
                 xcS = xc;
                 ycS = yc;
