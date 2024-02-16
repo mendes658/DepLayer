@@ -243,18 +243,6 @@ while (sensorType1.qtt > 0)
                                                 outOfBounds = outOfBounds + 1;
                                            end
                                         end
-
-                                        % if (j + cnt < hMBs && j + cnt > 0 && cnt < -1 && i < wMBs  && i > 0)
-                                        %     outCounter = outCounter - 1;
-                                        % 
-                                        %     if (sensorsAreas(j + cnt, i) == 1)
-                                        %         oLeapBlocks = oLeapBlocks + 1;
-                                        %     else
-                                        %         nonOLeapBlocks = nonOLeapBlocks + 1;
-                                        %     end
-                                        % 
-                                        %     %nowCoverageStatus = nowCoverageStatus + (noOverleapW + oLeap*overleapW);
-                                        % end
         
                                         if (cnt2 < -1)
                                             if (i + cnt2 < wMBs && i + cnt2 > 0 && j < hMBs && j > 0)
@@ -277,18 +265,6 @@ while (sensorType1.qtt > 0)
                                                 outOfBounds = outOfBounds + 1;
                                             end
                                         end
-
-                                        % if (i + cnt2 < wMBs && i + cnt2 > 0 && cnt2 < -1 && j < hMBs && j > 0)
-                                        %     outCounter = outCounter - 1;
-                                        % 
-                                        %     if (sensorsAreas(j, i + cnt2) == 1)
-                                        %         oLeapBlocks = oLeapBlocks + 1;
-                                        %     else
-                                        %         nonOLeapBlocks = nonOLeapBlocks + 1;
-                                        %     end
-                                        % 
-                                        %     %nowCoverageStatus = nowCoverageStatus + (noOverleapW + oLeap*overleapW);
-                                        % end
                                         
                                         if (cnt2 < -1)
                                             if (j + cnt < hMBs && i + cnt2 < wMBs && j + cnt > 0 && i + cnt2 > 0)
@@ -314,18 +290,6 @@ while (sensorType1.qtt > 0)
                                             end
                                         end
 
-                                        % if (j + cnt < hMBs && i + cnt2 < wMBs && j + cnt > 0 && i + cnt2 > 0 && cnt2 < -1)
-                                        %     outCounter = outCounter - 1;
-                                        % 
-                                        %     if (sensorsAreas(j + cnt, i + cnt2) == 1)
-                                        %         oLeapBlocks = oLeapBlocks + 1;
-                                        %     else
-                                        %         nonOLeapBlocks = nonOLeapBlocks + 1;
-                                        %     end
-                                        % 
-                                        %     %nowCoverageStatus = nowCoverageStatus + (noOverleapW + oLeap*overleapW);
-                                        % end
-
                                     end
     
                                     cnt = cnt-2;
@@ -339,24 +303,6 @@ while (sensorType1.qtt > 0)
                     %%ratioOL = (oLeapBlocks + outOfBounds) / (oLeapBlocks+nonOLeapBlocks+outOfBounds);
                     totalMbs = oLeapBlocks+nonOLeapBlocks+outOfBounds;
                     sensorValue = dpConnSum * ( (oLeapBlocks - (outOfBounds/3)) / totalMbs);
-
-                    % if (ratioOL < (maxOverLeapRatio / 100))
-                    % 
-                    %     if (m1 == maxConnM && n1 == maxConnN)
-                    %         if (nonOLeapBlocks > maxNonOLBlocks)
-                    %             maxNonOLBlocks = nonOLeapBlocks;
-                    %             maxCovM = m1;
-                    %             maxCovN = n1;
-                    %         end
-                    %     end
-                    % 
-                    %     if (nonOLeapBlocks > maxNonOLBlocks)
-                    %         maxNonOLBlocks = nonOLeapBlocks;
-                    %         maxCovM = m1;
-                    %         maxCovN = n1;
-                    %     end
-                    % 
-                    % end
                     
                     %if (ratioOL < (maxOverLeapRatio / 100))
                         if (m1 == maxConnM && n1 == maxConnN)
@@ -457,112 +403,7 @@ while (sensorType1.qtt > 0)
                 end
             end
 
-        %     for k=1 :sz
-        %         zn = zns(k);
-        % 
-        %         mIndex = zn.m;
-        %         nIndex = zn.n;
-        % 
-        %         x1s = x1 + (mIndex-1)*(w/M)*cosBeta + (nIndex-1)*(h/N)*sinBeta;
-        %         y1s = y1 + (mIndex-1)*(w/M)*sinBeta - (nIndex-1)*(h/N)*cosBeta;
-        %         x2s = x1 + (mIndex)*(w/M)*cosBeta + (nIndex-1)*(h/N)*sinBeta;
-        %         y2s = y1 + (mIndex)*(w/M)*sinBeta - (nIndex-1)*(h/N)*cosBeta;
-        %         x3s = x1 + (mIndex-1)*(w/M)*cosBeta + (nIndex)*(h/N)*sinBeta;
-        %         y3s = y1 + (mIndex-1)*(w/M)*sinBeta - (nIndex)*(h/N)*cosBeta;
-        %         x4s = x1 + (mIndex)*(w/M)*cosBeta + (nIndex)*(h/N)*sinBeta;
-        %         y4s = y1 + (mIndex)*(w/M)*sinBeta - (nIndex)*(h/N)*cosBeta;
-        % 
-        %         xc = x1s + (x4s-x1s)/2;
-        %         yc = y1s + (y4s-y1s)/2;
-        % 
-        %         % placing sensor circles
-        %         %if (MBs_classes(nIndex, mIndex) == nowMaxConn && sensorType1.qtt > 0)
-        %         %if (xc > 120 && yc > 120 && sensorType1.qtt > 0)
-        %         if (sensorOverflow == 0)
-        %             areasToComp = usedAreasMap;
-        %         else
-        %             areasToComp = sensorsAreas;
-        %         end
-        % 
-        %         if (MBs_classes(nIndex, mIndex) == nowMaxConn && sensorType1.qtt > 0 && ...
-        %                 areasToComp(nIndex, mIndex) ~= 1)
-        %             xcS = xc;
-        %             ycS = yc;
-        % 
-        %             c = circle2(xcS, ycS, sensorType1.r);
-        %             set(c, 'LineStyle','-', 'EdgeColor', 'black', 'LineWidth', 3);
-        %             hold on
-        % 
-        %             plot(xcS, ycS, '.', 'Color', 'black', 'MarkerSize', 4);
-        %             hold on
-        % 
-        %             %rectangle('Position',[x3s y3s ws hs],'LineWidth',0.5,'EdgeColor','b');
-        %             hold on
-        %             sensorType1.qtt = sensorType1.qtt - 1;
-        % 
-        %             wsInRad = ceil(sensorType1.r / ws);
-        %             hsInRad = ceil(sensorType1.r / hs);
-        %             doubleRadius = sensorType1.r * 2;
-        % 
-        %             cnt2 = 0;
-        %             for i = mIndex : mIndex + wsInRad * 2
-        %                 cnt = 0;
-        %                 for j = nIndex : nIndex + hsInRad * 2
-        % 
-        %                     x1s = x1 + (i-1)*(w/M)*cosBeta + (j-1)*(h/N)*sinBeta;
-        %                     y1s = y1 + (i-1)*(w/M)*sinBeta - (j-1)*(h/N)*cosBeta;
-        %                     x4s = x1 + (i)*(w/M)*cosBeta + (j)*(h/N)*sinBeta;
-        %                     y4s = y1 + (i)*(w/M)*sinBeta - (j)*(h/N)*cosBeta;
-        % 
-        %                     xc = x1s + (x4s-x1s)/2;
-        %                     yc = y1s + (y4s-y1s)/2;
-        % 
-        %                     %%% Updating sensorsAreas
-        %                     if (getDistance(xcS, ycS, xc, yc) <= doubleRadius)
-        %                         usedAreasMap(j, i) = 1;
-        % 
-        %                         if (j + cnt < hMBs && j + cnt > 0 && cnt < -1)
-        %                              usedAreasMap(j + cnt, i) = 1;
-        %                         end
-        % 
-        %                         if (i + cnt2 < wMBs && i + cnt2 > 0 && cnt2 < -1)
-        %                              usedAreasMap(j, i + cnt2) = 1;
-        %                         end
-        % 
-        %                         if (j + cnt < hMBs && i + cnt2 < wMBs && j + cnt > 0 && i + cnt2 > 0 && cnt2 < -1)
-        %                              usedAreasMap(j + cnt, i + cnt2) = 1;
-        %                         end
-        %                     end 
-        % 
-        %                     %%% Updating usedAreasMap
-        %                     if (getDistance(xcS, ycS, xc, yc) <= sensorType1.r)
-        %                         sensorsAreas(j, i) = 1;
-        %                         copyMBs_classes(j, i) = -1;
-        % 
-        %                         if (j + cnt < hMBs && j + cnt > 0 && cnt < -1)
-        %                              sensorsAreas(j + cnt, i) = 1;
-        %                              copyMBs_classes(j + cnt, i) = -1;
-        %                         end
-        % 
-        %                         if (i + cnt2 < wMBs && i + cnt2 > 0 && cnt2 < -1)
-        %                              sensorsAreas(j, i + cnt2) = 1;
-        %                              copyMBs_classes(j, i + cnt2) = -1;
-        %                         end
-        % 
-        %                         if (j + cnt < hMBs && i + cnt2 < wMBs && j + cnt > 0 && i + cnt2 > 0 && cnt2 < -1)
-        %                              sensorsAreas(j + cnt, i + cnt2) = 1;
-        %                              copyMBs_classes(j + cnt, i + cnt2) = -1;
-        %                         end
-        %                     end
-        % 
-        %                     cnt = cnt-2;
-        %                 end
-        %                 cnt2 = cnt2-2;
-        %             end
-        % 
-        %             break
-        %         end
-        %     end
+     
         end
     end 
 end
